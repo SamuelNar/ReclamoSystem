@@ -1,0 +1,9 @@
+/* styles.css */
+button:hover {
+    background-color: #1095e2; /* Color para el botón de agregar reclamo */
+}
+  
+.backButton:hover {
+    background-color: #ba0ae6; /* Color para el botón de volver */
+}
+  
