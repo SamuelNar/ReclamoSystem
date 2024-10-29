@@ -46,7 +46,7 @@ function App() {
         {isDownloading ? (
           <p>Descargando actualización...</p>
         ) : (
-          <p>La aplicación está actualizada.</p>
+          <p>La aplicación está actualizada a la última versión.</p>
         )}
         <button onClick={handleInstallUpdate} style={styles.updateButton}>
           Instalar actualización
