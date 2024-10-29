@@ -1,6 +1,6 @@
 {
   "name": "reclamosystem",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -45,8 +45,8 @@
     },
     "publish": [{
       "provider": "github",
-      "owner": "tu-usuario-github",
-      "repo": "tu-repositorio"
+      "owner": "SamuelNar",
+      "repo": "https://github.com/SamuelNar/ReclamoSystem"
     }],
     "linux": {
       "target": [

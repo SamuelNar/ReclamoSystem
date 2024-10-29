@@ -25,6 +25,9 @@ export default function ListaReclamos() {
       setLoading(false);
     }
   }
+  const handleRefresh = () => {
+    fetchData(); // Refresca los datos al hacer clic en el ícono
+  };
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
   };
@@ -81,6 +84,7 @@ export default function ListaReclamos() {
   return (
     <div>
       <h1>Lista de Reclamos</h1>
+      <button style={styles.statusButton} onClick={handleRefresh}>Recargar</button>
       <label>
         Ver reclamos:
         <select value={filter} onChange={(e) => setFilter(e.target.value)} style={styles.select}>

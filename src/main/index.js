@@ -4,8 +4,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import mysql from 'mysql2/promise'
-const { autoUpdater } = require('electron-updater')
-import path from 'path'
+import { autoUpdater }  from 'electron-updater'
 autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
 
@@ -16,6 +15,7 @@ const db = mysql.createPool({
   database: 'gestion_reclamos'
 })
 
+// ======================= FUNCIONES DE BASE DE DATOS =======================
 async function fetchData() {
   try {
     const [rows] = await db.execute('SELECT * FROM reclamos')
@@ -81,6 +81,8 @@ async function changeState(reclamoId, reclamosEstado) {
     console.log('Error al actualizar el estado del reclamo', error)
   }
 }
+
+// ======================= CREACIÓN DE VENTANA =======================
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -95,6 +97,23 @@ function createWindow() {
       sandbox: false
     }
   })
+  
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show()
+  })
+
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url)
+    return { action: 'deny' }
+  })
+
+  // HMR for renderer base on electron-vite cli.
+  // Load the remote URL for development or the local html file for production.
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  } else {
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  }
 
   autoUpdater.checkForUpdates()
 
@@ -131,31 +150,7 @@ function createWindow() {
     dialog.showErrorBox('Error en la actualización', 
       'Ocurrió un error al buscar actualizaciones: ' + err.message)
   })
-
   
-
-  if (process.env.ELECTRON_RENDERER_URL) {
-    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
-  } else {
-    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
-  }
-
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
-
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
-
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-  }
 }
 
 // This method will be called when Electron has finished
@@ -191,6 +186,8 @@ app.whenReady().then(() => {
     return await changeState(reclamoId, reclamosEstado)
   })
 
+  ipcMain.on('install-update', () => autoUpdater.quitAndInstall());
+
   createWindow()
 
   app.on('activate', function () {
@@ -198,6 +195,10 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 1000 * 60 * 60); // Verificar cada hora
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

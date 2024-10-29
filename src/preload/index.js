@@ -8,7 +8,12 @@ const api = {
   updateData: async (reclamosId, updatedReclamos) =>
     await ipcRenderer.invoke('update-data', reclamosId, updatedReclamos),
   changeState: async (reclamoId, reclamosEstado) =>
-    await ipcRenderer.invoke('change-state', reclamoId, reclamosEstado)
+    await ipcRenderer.invoke('change-state', reclamoId, reclamosEstado),
+  // Actualización de la app
+  installUpdate: () => ipcRenderer.send('install-update'),
+
+  // Escucha de eventos del auto-updater
+  onUpdateDownloading: (callback) => ipcRenderer.on('update-downloading', callback)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
