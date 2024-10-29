@@ -46,7 +46,8 @@
     "publish": [{
       "provider": "github",
       "owner": "SamuelNar",
-      "repo": "https://github.com/SamuelNar/ReclamoSystem"
+      "repo": "https://github.com/SamuelNar/ReclamoSystem",
+      "releaseType": "release"
     }],
     "linux": {
       "target": [
