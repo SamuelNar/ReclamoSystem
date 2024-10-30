@@ -21,7 +21,7 @@ function App() {
   }, []); // Array vacío asegura que solo se ejecute una vez
 
   const handleInstallUpdate = () => {
-    window.api.installUpdate();
+    window.api.installUpdate()
   };
 
   const handleVista = () => {
@@ -49,7 +49,7 @@ function App() {
           <p>La aplicación está actualizada a la última versión.</p>
         )}
         <button onClick={handleInstallUpdate} style={styles.updateButton}>
-          Instalar actualización
+            Instalar
         </button>
       </div>
     </>
