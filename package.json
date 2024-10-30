@@ -1,6 +1,6 @@
 {
   "name": "reclamosystem",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -60,7 +60,8 @@
     },
     "win": {
     "target": "nsis",
-    "icon": "build/icon.ico"
+    "icon": "build/icon.ico",
+    "artifactName": "${productName}-Setup-${version}.${ext}"
   },
   "nsis": {
     "oneClick": false,    

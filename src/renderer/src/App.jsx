@@ -1,29 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import ListaReclamos from './components/ListaReclamos';
 import NuevoReclamo from './components/NuevoReclamo';
 import img from './assets/LogoTextoAzul.png';
 
 function App() {
   const [mostrarLista, setMostrarLista] = useState(true);
-  const [isDownloading, setIsDownloading] = useState(false);
-
   // Registrar evento solo una vez al montar el componente
-  useEffect(() => {
-    const handleUpdateDownloading = () => setIsDownloading(true);
-
-    // Registrar el evento
-    window.api.onUpdateDownloading(handleUpdateDownloading);
-
-    // Limpiar el evento al desmontar el componente
-    return () => {
-      window.api.onUpdateDownloading(handleUpdateDownloading); // Clean up listener
-    };
-  }, []); // Array vacío asegura que solo se ejecute una vez
-
-  const handleInstallUpdate = () => {
-    window.api.installUpdate()
-  };
-
   const handleVista = () => {
     setMostrarLista(!mostrarLista); // Alterna entre vistas
   };
@@ -40,17 +22,6 @@ function App() {
           </button>
         </div>
         {mostrarLista ? <ListaReclamos /> : <NuevoReclamo onBack={handleVista} />}
-      </div>
-
-      <div style={styles.updateContainer}>
-        {isDownloading ? (
-          <p>Descargando actualización...</p>
-        ) : (
-          <p>La aplicación está actualizada a la última versión.</p>
-        )}
-        <button onClick={handleInstallUpdate} style={styles.updateButton}>
-            Instalar
-        </button>
       </div>
     </>
   );
