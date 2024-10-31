@@ -11,8 +11,7 @@ const api = {
     await ipcRenderer.invoke('change-state', reclamoId, reclamosEstado),
   // Actualización de la app
   installUpdate: () => ipcRenderer.send('install-update'),
-
-  // Escucha de eventos del auto-updater
+  onUpdateProgress: (callback) => ipcRenderer.on('update-progress', callback),
   onUpdateDownloading: (callback) => ipcRenderer.on('update-downloading', callback)
 }
 

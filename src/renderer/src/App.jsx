@@ -1,14 +1,14 @@
-import { useState} from 'react';
-import ListaReclamos from './components/ListaReclamos';
-import NuevoReclamo from './components/NuevoReclamo';
-import img from './assets/LogoTextoAzul.png';
-
+/* eslint-disable prettier/prettier */
+import { useState } from 'react'
+import ListaReclamos from './components/ListaReclamos'
+import NuevoReclamo from './components/NuevoReclamo'
+import img from './assets/LogoTextoAzul.png'
+import UpdateProgress from './components/UpdateProgress'
 function App() {
-  const [mostrarLista, setMostrarLista] = useState(true);
-  // Registrar evento solo una vez al montar el componente
+  const [mostrarLista, setMostrarLista] = useState(true)
   const handleVista = () => {
-    setMostrarLista(!mostrarLista); // Alterna entre vistas
-  };
+    setMostrarLista(!mostrarLista)
+  }
 
   return (
     <>
@@ -22,9 +22,10 @@ function App() {
           </button>
         </div>
         {mostrarLista ? <ListaReclamos /> : <NuevoReclamo onBack={handleVista} />}
+        <UpdateProgress />
       </div>
     </>
-  );
+  )
 }
 
 const styles = {
@@ -35,12 +36,12 @@ const styles = {
     padding: '20px',
     backgroundColor: '#f7f7f7',
     borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
   },
   navbar: {
     display: 'flex',
     justifyContent: 'center',
-    marginBottom: '20px',
+    marginBottom: '20px'
   },
   button: {
     padding: '10px 20px',
@@ -49,19 +50,19 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: '16px',
+    fontSize: '16px'
   },
   logoContainer: {
     textAlign: 'center',
-    marginBottom: '20px',
+    marginBottom: '20px'
   },
   logo: {
     maxWidth: '200px',
-    height: 'auto',
+    height: 'auto'
   },
   updateContainer: {
     marginTop: '20px',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   updateButton: {
     marginTop: '10px',
@@ -71,8 +72,8 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: '16px',
-  },
-};
+    fontSize: '16px'
+  }
+}
 
-export default App;
+export default App

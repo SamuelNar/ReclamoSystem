@@ -145,6 +145,16 @@ function createWindow() {
     })
   })
 
+  autoUpdater.on('download-progress', (progressObj) => {
+    // Enviar el progreso al renderer
+    mainWindow.webContents.send('update-progress', {
+      percent: progressObj.percent,
+      transferred: progressObj.transferred,
+      total: progressObj.total,
+      bytesPerSecond: progressObj.bytesPerSecond
+    })
+  })
+
   // Manejar errores
   autoUpdater.on('error', (err) => {
     dialog.showErrorBox('Error en la actualización', 
