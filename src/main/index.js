@@ -1,12 +1,30 @@
 /* eslint-disable prettier/prettier */
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog} from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import mysql from 'mysql2/promise'
+import os from 'os'
 import { autoUpdater }  from 'electron-updater'
 autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
+
+// Configuraciones específicas para Windows 7
+if (os.platform() === 'win32' && os.release().startsWith('6.1')) {
+  // Deshabilitar aceleración por hardware
+  app.disableHardwareAcceleration()
+  
+  // Configuraciones adicionales para mejorar la compatibilidad
+  app.commandLine.appendSwitch('disable-gpu')
+  app.commandLine.appendSwitch('no-sandbox')
+  app.commandLine.appendSwitch('use-angle', 'gl')
+  
+  // Limitar la longitud de las rutas
+  app.setPath('userData', join(os.homedir(), '.reclamos'))
+  
+  // Deshabilitar APIs obsoletas
+  app.commandLine.appendSwitch('disable-site-isolation-trials')
+}
 
 const db = mysql.createPool({
   host: '192.168.50.28',
@@ -15,7 +33,6 @@ const db = mysql.createPool({
   database: 'gestion_reclamos'
 })
 
-// ======================= FUNCIONES DE BASE DE DATOS =======================
 async function fetchData() {
   try {
     const [rows] = await db.execute('SELECT * FROM reclamos')
@@ -50,10 +67,8 @@ async function updateData(reclamosId, updatedReclamos) {
   try {
     const query =
       'UPDATE reclamos SET nombre = ?, producto = ?, descripcion = ?, importancia = ?, estado = ?, fecha_creacion = ? WHERE id = ?'
-    // Extraemos los valores de updatedReclamos
     const { nombre, producto, descripcion, importancia, estado, fecha_creacion } = updatedReclamos
 
-    // Ejecutamos la consulta con los valores actualizados y el ID del reclamo
     const [result] = await db.execute(query, [
       nombre,
       producto,
@@ -82,7 +97,6 @@ async function changeState(reclamoId, reclamosEstado) {
   }
 }
 
-// ======================= CREACIÓN DE VENTANA =======================
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -97,7 +111,7 @@ function createWindow() {
       sandbox: false
     }
   })
-  
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -144,15 +158,9 @@ function createWindow() {
       }
     })
   })
-
+  
   autoUpdater.on('download-progress', (progressObj) => {
-    // Enviar el progreso al renderer
-    mainWindow.webContents.send('update-progress', {
-      percent: progressObj.percent,
-      transferred: progressObj.transferred,
-      total: progressObj.total,
-      bytesPerSecond: progressObj.bytesPerSecond
-    })
+    mainWindow.webContents.send('download-progress', progressObj)
   })
 
   // Manejar errores
@@ -160,19 +168,22 @@ function createWindow() {
     dialog.showErrorBox('Error en la actualización', 
       'Ocurrió un error al buscar actualizaciones: ' + err.message)
   })
-  
+
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
+  // Configurar el AppUserModelId para Windows
+  if (process.platform === 'win32') {
+    app.setAppUserModelId(process.execPath)
+  }
+
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
@@ -211,9 +222,7 @@ app.whenReady().then(() => {
   }, 1000 * 60 * 60); // Verificar cada hora
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+// Quit when all windows are closed, except on macOS
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
