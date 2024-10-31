@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useState, useEffect} from 'react'
 import ListaReclamos from './components/ListaReclamos'
 import NuevoReclamo from './components/NuevoReclamo'
