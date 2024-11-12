@@ -27,8 +27,8 @@ if (os.platform() === 'win32' && os.release().startsWith('6.1')) {
 }
 
 const db = mysql.createPool({
-  host: 'localhost', //192.168.50.28
-  user: 'root',
+  host: '192.168.50.28', //192.168.50.28
+  user: 'lidercom',
   password: '123lidercom456',
   database: 'gestion_reclamos'
 })
