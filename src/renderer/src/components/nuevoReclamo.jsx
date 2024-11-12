@@ -11,6 +11,7 @@ export default function NuevoReclamo({ onBack }) {
     importancia: 'Baja',
     estado: 'activo',
     fecha_creacion: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    asignado: '', // New field
   });
 
   const [descripciones] = useState({
@@ -69,6 +70,7 @@ export default function NuevoReclamo({ onBack }) {
         importancia: 'Baja',
         estado: 'activo',
         fecha_creacion: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        asignado: '',
       });
 
       setTimeout(() => {
@@ -125,6 +127,16 @@ export default function NuevoReclamo({ onBack }) {
           <option value="Baja">Baja</option>
           <option value="Media">Media</option>
           <option value="Alta">Alta</option>
+        </select>
+        <select name="asignado" value={form.asignado} onChange={handleChange} style={styles.select}>
+          <option value="">Asignar a</option>
+          <option value="Maxi">Maxi</option>
+          <option value="Samuel">Samuel</option>
+          <option value="Agustin">Agustin</option>
+          <option value="Gabriel">Gabriel</option>
+          <option value="Pablo">Pablo</option>
+          <option value="Silvio">Silvio</option>
+          <option value="Joel">Joel</option>
         </select>
         <button type="submit" style={styles.button}>Agregar Reclamo</button>
         <button type="button" onClick={onBack} style={styles.backButton}>
@@ -197,7 +209,7 @@ const styles = {
     cursor: 'pointer',
     transition: 'background 0.3s',
   },
-  mensaje: {   
+  mensaje: {
     marginTop: '20px',
     color: 'green',
     fontSize: '16px',
@@ -205,4 +217,3 @@ const styles = {
   },
 };
 
-// Para aplicar hover se pueden usar estilos en CSS o en un archivo CSS-in-JS

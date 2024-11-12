@@ -27,8 +27,8 @@ if (os.platform() === 'win32' && os.release().startsWith('6.1')) {
 }
 
 const db = mysql.createPool({
-  host: '192.168.50.28',
-  user: 'lidercom',
+  host: 'localhost', //192.168.50.28
+  user: 'root',
   password: '123lidercom456',
   database: 'gestion_reclamos'
 })
@@ -44,22 +44,23 @@ async function fetchData() {
 }
 
 async function insertData(reclamos) {
-  const { nombre, producto, descripcion, importancia, estado, fecha_creacion } = reclamos
+  const { nombre, producto, descripcion, importancia, estado, fecha_creacion, asignado } = reclamos;
   try {
     const query =
-      'INSERT INTO reclamos (nombre, producto, descripcion, importancia, estado, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO reclamos (nombre, producto, descripcion, importancia, estado, fecha_creacion, asignado) VALUES (?, ?, ?, ?, ?, ?, ?)';
     const [result] = await db.execute(query, [
       nombre,
       producto,
       descripcion,
       importancia,
       estado,
-      fecha_creacion
-    ])
-    return result
+      fecha_creacion,
+      asignado, // Nuevo campo asignado
+    ]);
+    return result;
   } catch (error) {
-    console.log('Error al agregar usuario', error)
-    throw error
+    console.log('Error al agregar usuario', error);
+    throw error;
   }
 }
 

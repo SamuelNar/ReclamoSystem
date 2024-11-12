@@ -125,6 +125,9 @@ export default function ListaReclamos() {
             <p>
               <strong>Importancia:</strong> {item.importancia}
             </p>
+            <p>
+              <strong>Asignado a:</strong> {item.asignado}
+            </p>
             <button
               onClick={() =>
                 handleChangeStatus(item, item.estado === 'activo' ? 'finalizado' : 'activo')
